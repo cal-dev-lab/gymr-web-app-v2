@@ -52,6 +52,10 @@ export default function DailyProgress({ data, user }) {
               .eq("userId", user?.id);
         
             if (error) throw error;
+
+            if (data != null) {
+                return data;
+            }
         
             console.log('Successfully reset complete status');
         } catch (error) {
