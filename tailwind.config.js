@@ -13,7 +13,8 @@ export default {
     },
     colors: {
       transparent: 'transparent',
-      'white': '#f0f0f0',
+      'white': '#fff',
+      'off-white': '#f0f0f0',
       'background': '#000f17',
       'black': '#0f0f0f',
       'purple': '#9000ff',

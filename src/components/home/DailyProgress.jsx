@@ -4,6 +4,7 @@ import Heading from "../common/Heading";
 import { useEffect, useState } from 'react';
 import Loader from '../common/Loader';
 import { supabase } from '../../supabaseClient';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function DailyProgress({ data, user }) {
     if (!data) {
@@ -57,13 +58,21 @@ export default function DailyProgress({ data, user }) {
                 return data;
             }
         
-            console.log('Successfully reset complete status');
+            toast.success("Daily progress has been reset!", {
+                position: "bottom-center"
+            });
+            window.location.reload();
         } catch (error) {
             alert(error.message);
         } 
     }
 
+    // The two useEffects below reset the localStorage values of
+    // 'EXERCISES_COMPLETE
     useEffect(() => {
+        const data = window.localStorage.getItem('EXERCISES_COMPLETE');
+        if ( data !== null ) setCompleteExercises(JSON.parse(data))
+
         const resetAfter24Hours = () => {
             fetchAllCompleteExercises();
             resetCompleteStatus();
@@ -72,8 +81,13 @@ export default function DailyProgress({ data, user }) {
         const timer = setTimeout(resetAfter24Hours, 24 * 60 * 60 * 1000); // Resets daily 24 hours in milliseconds
 
         return () => clearTimeout(timer); // Clear the timeout if the component unmounts or the state changes
-    }, [completeExercises]);
+    }, []);
 
+    useEffect(() => {
+        window.localStorage.setItem('EXERCISES_COMPLETE', JSON.stringify(exercisesComplete.length));
+    }, [exercisesComplete.length]);
+
+    // Sets motivation message based on percentage
     useEffect(() => {
         if (calculation == 0) {
             setMotivationMsg("Let's get started!")
@@ -86,10 +100,11 @@ export default function DailyProgress({ data, user }) {
         } else if (calculation == 100) {
             setMotivationMsg("Congratulations! 🎉")
         }
-    }, [completeExercises])
-    
+    }, [data])
+
     return (
         <Box classnames="flex-col">
+            <Toaster />
             <Heading size="sm" classNames='mb-4'>
                 <b>Daily progress tracker</b>
                 <p>Track your total workouts for today.</p>
@@ -107,7 +122,9 @@ export default function DailyProgress({ data, user }) {
                             : <span>
                                 {
                                     data?.length > 0 ? (
-                                        <span>{Math.floor(calculation)}%</span>
+                                        <span>
+                                            {Math.floor(calculation)}%
+                                        </span>
                                     ) : <span>Loading...</span>
                                 }
                                 

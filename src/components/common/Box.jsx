@@ -3,6 +3,7 @@ export default function Box({ props, colour = "white", classnames = "", children
         purple: "bg-purple",
         white: "bg-white",
         black: "bg-black",
+        off_white: "bg-off-white"
     }
 
     return (
