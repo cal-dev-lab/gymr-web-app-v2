@@ -4,8 +4,7 @@ import { useLocation } from "react-router";
 import Loader from "../../../components/common/Loader";
 import Heading from "../../../components/common/Heading";
 import Box from "../../../components/common/Box";
-
-
+import WorkoutCard from "../../../components/workouts/WorkoutCard";
 
 export default function WorkoutsHome(props) {
     const [data, setData] = useState([]);
@@ -41,9 +40,9 @@ export default function WorkoutsHome(props) {
     }, []);
 
     return (
-        <section>
+        <section className="bg-white">
             <Box>
-                <Heading size="sm">
+                <Heading>
                     <b>{group.title ?? ""}</b>
                 </Heading>
             </Box>
@@ -53,11 +52,8 @@ export default function WorkoutsHome(props) {
                 {
                     data?.length > 0 ? (
                         data.map(item => (
-                            // Card here for individual workouts
                             <div key={item.id}>
-                            <p>{item.title}</p>
-                            <p>{item.repetitions}</p>
-                            <p>{item.weight}</p>
+                                <WorkoutCard workout={item} />
                             </div>
                         ))
                     ) : (

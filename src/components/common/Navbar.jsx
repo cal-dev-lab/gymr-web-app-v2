@@ -10,6 +10,7 @@ export default function Navbar({ user }) {
             element: <button onClick={() => supabase.auth.signOut()}>Sign out</button>
         }
     ]
+
     return (
         <Box>
             <div className="flex justify-between items-center h-full">

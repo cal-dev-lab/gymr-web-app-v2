@@ -7,9 +7,8 @@ import { supabase } from "../../supabaseClient";
 import { Link } from "react-router-dom";
 import GroupCard from "./GroupCard";
 
-export default function MyWorkouts({ workouts }) {
+export default function MyWorkouts() {
     const [data, setData] = useState([]);
-    const [user, setUser] = useState([]);
 
     async function fetchGroups() {
         try {
@@ -23,7 +22,7 @@ export default function MyWorkouts({ workouts }) {
             if (error) throw error;
               
             if (data != null) {
-              return setData(data), setUser(user);
+              return setData(data);
             }
             console.log(data)
           } catch (error) {
@@ -36,7 +35,7 @@ export default function MyWorkouts({ workouts }) {
         fetchGroups();
     }, [])
 
-    if (!workouts) {
+    if (!data) {
         return <Loader />
     }
     
@@ -44,7 +43,7 @@ export default function MyWorkouts({ workouts }) {
         <Box>
             <Heading size="sm" classNames='mb-4'>
                 <b>My workouts</b>
-                <p>Pick from a workout below and record your workout.</p>
+                <p>Pick from a workout group below and record your workout.</p>
             </Heading>
 
             {
