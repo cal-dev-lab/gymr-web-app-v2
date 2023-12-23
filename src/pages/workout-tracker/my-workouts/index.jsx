@@ -5,6 +5,8 @@ import Loader from "../../../components/common/Loader";
 import Heading from "../../../components/common/Heading";
 import Box from "../../../components/common/Box";
 import WorkoutCard from "../../../components/workouts/WorkoutCard";
+import Button from "../../../components/common/Button";
+import { HiPlus } from "react-icons/hi2";
 
 export default function WorkoutsHome() {
     const [data, setData] = useState([]);
@@ -42,11 +44,18 @@ export default function WorkoutsHome() {
     }, []);
 
     return (
-        <section className="bg-white">
+        <section>
             <Box>
                 <Heading size="lg">
                     <b>{group.title ?? ""}</b>
                 </Heading>
+            </Box>
+
+            <Box>
+                <Button classnames="flex items-center gap-2">
+                    <HiPlus />
+                    Add Exercise
+                </Button>
             </Box>
             
 
@@ -54,12 +63,12 @@ export default function WorkoutsHome() {
                 {
                     data?.length > 0 ? (
                         data.map(item => (
-                            <div key={item.id}>
-                                <WorkoutCard workout={item} />
-                            </div>
+                            <WorkoutCard key={item.id} workout={item} />
                         ))
                     ) : (
-                        <Loader />
+                        <Box>
+                            <p>No exercises for this group.</p>
+                        </Box>
                     )
                 }
             </div>

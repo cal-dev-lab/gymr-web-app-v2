@@ -57,49 +57,116 @@ export default function GroupRow({ group }) {
         }
     }
 
+    async function deleteGroup() {
+        try {
+            setDisabled(true);
+
+            // const { data: { user } } = await supabase.auth.getUser();
+
+            const { error } = await supabase
+                .from("exercise_groups")
+                .delete()
+                .eq("id", group.id)
+
+            if (error) throw error;
+
+            toast.success("Successfully deleted group!", {
+                position: "bottom-center"
+            })
+            
+            window.location.reload();
+          } catch (error) {
+            alert(error.message);
+            // Toast notification error
+        }
+    }
+
     return (
         <Box colour="purple" classnames="m-0">
             <Toaster />
             
             <p>{group.title}</p>
 
-            <Dialog.Root>
-                <Dialog.Trigger asChild>
-                    <button className='text-white'>Edit</button>
-                </Dialog.Trigger>
+            {/* Edit */}
+            <div>
+                <Dialog.Root>
+                    <Dialog.Trigger asChild>
+                        <button className='text-white'>Edit</button>
+                    </Dialog.Trigger>
 
-                <Dialog.Portal>
-                    <Dialog.Overlay className="DialogOverlay" />
-                    <Dialog.Content className="DialogContent font-grotesk">
-                        <Dialog.Title className="DialogTitle">
-                            <Heading size="xl">
-                                <b>Edit group</b>
-                            </Heading>
-                        </Dialog.Title>
-                        <Dialog.Description className="mb-2">
-                            <p>Update the group title.</p>
-                        </Dialog.Description>
-                        <section className="flex-col gap-2">
-                            <label className="Label" htmlFor="name">
-                                <b>Title</b>
-                            </label>
-                            <Input defaultValue={oldGroupTitle ?? ""} onChange={e => setNewGroupTitle(e.target.value)} />
-                        </section>
-                        <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
+                    <Dialog.Portal>
+                        <Dialog.Overlay className="DialogOverlay" />
+                        <Dialog.Content className="DialogContent font-grotesk">
+                            <Dialog.Title className="DialogTitle">
+                                <Heading size="xl">
+                                    <b>Edit group</b>
+                                </Heading>
+                            </Dialog.Title>
+                            <Dialog.Description className="mb-2">
+                                <p>Update the group title.</p>
+                            </Dialog.Description>
+                            <section className="flex-col gap-2">
+                                <label className="Label" htmlFor="name">
+                                    <b>Title</b>
+                                </label>
+                                <Input defaultValue={oldGroupTitle ?? ""} onChange={e => setNewGroupTitle(e.target.value)} />
+                            </section>
+                            <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
+                                <Dialog.Close asChild>
+                                    <Button onClick={updateGroup} disabled={disabled}>
+                                        Save changes
+                                    </Button>
+                                </Dialog.Close>
+                            </div>
                             <Dialog.Close asChild>
-                                <Button onClick={updateGroup} disabled={disabled}>
-                                    Save changes
-                                </Button>
+                                <button className="IconButton" aria-label="Close">
+                                    <HiXMark />
+                                </button>
                             </Dialog.Close>
-                        </div>
-                        <Dialog.Close asChild>
-                            <button className="IconButton" aria-label="Close">
-                                <HiXMark />
-                            </button>
-                        </Dialog.Close>
-                    </Dialog.Content>
-                </Dialog.Portal>
+                        </Dialog.Content>
+                    </Dialog.Portal>
+                </Dialog.Root>
+            </div>
+
+            {/* Delete */}
+            <Dialog.Root>
+                    <Dialog.Trigger asChild>
+                        <button className='text-white'>Delete</button>
+                    </Dialog.Trigger>
+
+                    <Dialog.Portal>
+                        <Dialog.Overlay className="DialogOverlay" />
+                        <Dialog.Content className="DialogContent font-grotesk">
+                            <Dialog.Title className="DialogTitle">
+                                <Heading size="xl">
+                                    <b>Delete group</b>
+                                </Heading>
+                            </Dialog.Title>
+                            <Dialog.Description className="mb-2">
+                                <p>Are you sure you want to delete {group.title}? This action cannot be undone.</p>
+                            </Dialog.Description>
+                            
+                            <div className="flex mt-4 justify-end gap-2">
+                                <Dialog.Close asChild>
+                                    <Button classnames="!bg-purple/20 !text-purple">
+                                        Cancel
+                                    </Button>
+                                </Dialog.Close>
+                                <Dialog.Close asChild>
+                                    <Button colour="purple" onClick={deleteGroup} disabled={disabled}>
+                                        Confirm
+                                    </Button>
+                                </Dialog.Close>
+                            </div>
+                            <Dialog.Close asChild>
+                                <button className="IconButton" aria-label="Close">
+                                    <HiXMark />
+                                </button>
+                            </Dialog.Close>
+                        </Dialog.Content>
+                    </Dialog.Portal>
             </Dialog.Root>
+            
         </Box>
     )
 }
