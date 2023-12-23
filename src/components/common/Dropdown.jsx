@@ -18,7 +18,7 @@ export default function Dropdown({ icon = <HiChevronUpDown />, options }) {
                     {
                         options?.length > 0 ? (
                             options.map(option => (
-                                <DropdownMenu.Item>
+                                <DropdownMenu.Item key={option.id}>
                                     {option.element}
                                 </DropdownMenu.Item>
                             ))

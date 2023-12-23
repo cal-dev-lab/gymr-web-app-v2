@@ -3,10 +3,10 @@ import Box from "../common/Box";
 import Heading from "../common/Heading";
 import { supabase } from "../../supabaseClient";
 import { useEffect, useState } from "react";
+import Loader from "../common/Loader";
 
 export default function GroupCard({ group }) {
     const [data, setData] = useState([]);
-    const [user, setUser] = useState([]);
 
     async function fetchWorkouts() {
         try {
@@ -14,15 +14,15 @@ export default function GroupCard({ group }) {
 
             const { data, error } = await supabase
             .from("exercises")
-            .select("group")
-            .eq("userId", user?.id && "group", group.title)
+            .select("*")
+            .eq("userId", user?.id)
+            .eq("group", group.title)
 
-            if (error) throw error;
-              
             if (data != null) {
-              return setData(data), setUser(user);
+                return setData(data);
             }
-            console.log(data)
+            
+            if (error) throw error;
           } catch (error) {
             alert(error.message);
             // Toast notification error
@@ -33,15 +33,28 @@ export default function GroupCard({ group }) {
         fetchWorkouts();
     }, []);
 
+    if (!data)
+        return <Loader />;
+
+    // Calculate percentage complete
+    let totalExercises = data?.length;
+    let exercisesComplete = Object.values(data).filter(item => item.complete == true);
+
+
     return (
-        <Box onClick={fetchWorkouts} colour="purple" classnames="flex justify-between items-center gap-2 !m-0 !mb-2">
+        <Box  colour="purple" classnames="flex justify-between items-center gap-2 !m-0 !mb-2">
             <Heading size="sm" classNames="truncate text-white">
                     <b title={group.title}>
                         {group.title ?? ""}
                     </b>
+                    <p className="text-xs">
+                        {`${exercisesComplete.length} / ${totalExercises}`} completed
+                    </p>
             </Heading>
 
-            <HiArrowLongRight />
+            <div className="flex items-center gap-2">
+                <HiArrowLongRight />
+            </div>
         </Box>
     )
 }

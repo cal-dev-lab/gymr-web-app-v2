@@ -11,7 +11,11 @@ export default function WorkoutsHome(props) {
     const location = useLocation();
     const group = location?.state.data; // data passed from Link
 
-    async function fetchWorkouts(groupTitle) {
+    if (!group) {
+        return <Loader />;
+    }
+
+    async function fetchWorkouts() {
         try {
             const { data: { user } } = await supabase.auth.getUser();
 
@@ -40,7 +44,7 @@ export default function WorkoutsHome(props) {
     return (
         <section className="bg-white">
             <Box>
-                <Heading>
+                <Heading size="lg">
                     <b>{group.title ?? ""}</b>
                 </Heading>
             </Box>

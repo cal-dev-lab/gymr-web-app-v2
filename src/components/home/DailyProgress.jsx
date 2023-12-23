@@ -125,7 +125,7 @@ export default function DailyProgress({ data, user }) {
                                         <span>
                                             {Math.floor(calculation)}%
                                         </span>
-                                    ) : <span>Loading...</span>
+                                    ) : <span>0%</span>
                                 }
                                 
                               </span>

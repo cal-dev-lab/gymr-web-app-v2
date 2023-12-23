@@ -8,6 +8,7 @@ import {
 import ErrorPage from './ErrorPage';
 import App from './App';
 import WorkoutsHome from './pages/workout-tracker/my-workouts';
+import CreateGroup from './pages/settings/create-group';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/workout/:id",
     element: <WorkoutsHome />,
+  },
+  {
+    path: "/settings/create-group",
+    element: <CreateGroup />,
   },
 ]);
 

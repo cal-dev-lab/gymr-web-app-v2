@@ -1,4 +1,4 @@
-import { HiArrowLongRight } from "react-icons/hi2";
+import { HiArrowLongRight, HiPlus } from "react-icons/hi2";
 import Box from "../common/Box";
 import Heading from "../common/Heading";
 import Loader from "../common/Loader";
@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import { Link } from "react-router-dom";
 import GroupCard from "./GroupCard";
+import Button from "../common/Button";
 
 export default function MyWorkouts() {
     const [data, setData] = useState([]);
@@ -24,7 +25,6 @@ export default function MyWorkouts() {
             if (data != null) {
               return setData(data);
             }
-            console.log(data)
           } catch (error) {
             alert(error.message);
             // Toast notification error
@@ -38,6 +38,8 @@ export default function MyWorkouts() {
     if (!data) {
         return <Loader />
     }
+
+    console.log(data)
     
     return (
         <Box>
@@ -59,7 +61,18 @@ export default function MyWorkouts() {
 
                     ))
                 ) : (
-                    <p>You haven't setup any groups yet!</p>
+                    <div className="w-full">
+                        <p>You haven't setup any groups yet!</p>
+                        <Link 
+                            to={`/settings/create-group`}
+                            state={{ data }}
+                        >
+                            <Button classnames="w-full mt-2 flex gap-2">
+                                <HiPlus />
+                                <span>Create a group</span>
+                            </Button>
+                        </Link>
+                    </div>
                 )
                 
             }
