@@ -6,7 +6,7 @@ import Heading from "../../../components/common/Heading";
 import Box from "../../../components/common/Box";
 import WorkoutCard from "../../../components/workouts/WorkoutCard";
 
-export default function WorkoutsHome(props) {
+export default function WorkoutsHome() {
     const [data, setData] = useState([]);
     const location = useLocation();
     const group = location?.state.data; // data passed from Link

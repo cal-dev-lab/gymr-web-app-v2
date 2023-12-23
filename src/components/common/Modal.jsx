@@ -2,19 +2,21 @@ import React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import './Modal.css'
 
-export default function Modal({ title = "" }) {
+export default function Modal(props) {
     return (
         <Dialog.Root>
             <Dialog.Trigger asChild>
-                <button className='text-white'>{title}</button>
+                <button className='text-white'>{props.text}</button>
             </Dialog.Trigger>
 
             <Dialog.Portal>
                 <Dialog.Overlay className="DialogOverlay" />
                 <Dialog.Content className="DialogContent">
-                    <Dialog.Title className="DialogTitle">Edit profile</Dialog.Title>
+                    <Dialog.Title className="DialogTitle">
+                        {props.title}
+                    </Dialog.Title>
                     <Dialog.Description className="DialogDescription">
-                    Make changes to your profile here. Click save when you're done.
+                        {props.description}
                     </Dialog.Description>
                     <fieldset className="Fieldset">
                     <label className="Label" htmlFor="name">

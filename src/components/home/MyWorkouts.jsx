@@ -64,8 +64,8 @@ export default function MyWorkouts() {
                     <div className="w-full">
                         <p>You haven't setup any groups yet!</p>
                         <Link 
-                            to={`/settings/create-group`}
-                            state={{ data }}
+                            to="/settings/create-group"
+                            state={{ data: data }}
                         >
                             <Button classnames="w-full mt-2 flex gap-2">
                                 <HiPlus />

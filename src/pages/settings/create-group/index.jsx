@@ -1,26 +1,42 @@
 import { supabase } from "../../../supabaseClient";
-import { useLocation } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Box from "../../../components/common/Box";
 import Button from "../../../components/common/Button";
 import Heading from "../../../components/common/Heading";
 import Input from "../../../components/common/Input";
 import toast, { Toaster } from "react-hot-toast";
+import Loader from "../../../components/common/Loader";
+import GroupRow from "../../../components/create-group/GroupRow";
 
 export default function CreateGroup() {
+    const [data, setData] = useState([]);
     const [groupTitle, setGroupTitle] = useState("");
+    const [disabled, setDisabled] = useState(false);
 
-    const location = useLocation();
-    const group = location?.state.data;
+    async function fetchGroups() {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
 
-    if (!group) {
-        return <Loader />;
+            const { data, error } = await supabase
+                .from("exercise_groups")
+                .select("*")
+                .eq("userId", user?.id)
+
+            if (error) throw error;
+
+            if (data != null) {
+                return setData(data);
+            }
+          } catch (error) {
+            alert(error.message);
+            // Toast notification error
+        }
     }
-
-    console.log(group);
 
     async function handleSubmit() {
         try {
+            setDisabled(true);
+
             const { data: { user } } = await supabase.auth.getUser();
 
             const { error } = await supabase
@@ -32,13 +48,25 @@ export default function CreateGroup() {
 
             if (error) throw error;
 
+            
+
             toast.success("Successfully added group!", {
                 position: "bottom-center"
             })
+            
+            window.location.reload();
           } catch (error) {
             alert(error.message);
             // Toast notification error
         }
+    }
+
+    useEffect(() => {
+        fetchGroups();
+    }, []);
+
+    if (!data) {
+        return <Loader />;
     }
 
     return (
@@ -60,19 +88,28 @@ export default function CreateGroup() {
                         onChange={e => setGroupTitle(e.target.value)}
                         className="placeholder:italic" 
                         placeholder="E.g. Chest & Triceps"
+                        required
                     />
                 </div>
 
                 <div className="flex w-full justify-end">
-                    <Button onClick={handleSubmit}>Create group</Button>
+                    <Button onClick={handleSubmit} disabled={groupTitle == "" ? true : disabled}>Create group</Button>
                 </div>
             </Box>
 
-            <Box>
+            <Box classnames="space-y-2">
                 <Heading>
                     <b>Exisiting groups</b>
                 </Heading> 
-                <p>{group.title ?? "No groups"}</p>
+                {
+                    data?.length > 0 ? (
+                        data.map(group => (
+                            <GroupRow group={group} key={group.id} />                            
+                        ))
+                    ) : (
+                        <p>No exisiting groups...</p>
+                    )
+                }
             </Box>
         </>
     )
