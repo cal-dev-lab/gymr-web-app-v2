@@ -5,28 +5,46 @@ import { HiXMark } from "react-icons/hi2";
 import Input from "../common/Input";
 import Heading from "../common/Heading";
 import Button from "../common/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function GroupRow({ group }) {
-    const [groupTitle, setGroupTitle] = useState(group.title);
+    const [oldGroupTitle, setOldGroupTitle] = useState(group.title);
+    const [newGroupTitle, setNewGroupTitle] = useState("");
     const [disabled, setDisabled] = useState(false);
 
     async function updateGroup() {
         try {
             setDisabled(true);
 
-            const { data: { user } } = await supabase.auth.getUser();
+            // const { data: { user } } = await supabase.auth.getUser();
 
             const { error } = await supabase
                 .from("exercise_groups")
                 .update({
-                    title: groupTitle,
+                    title: newGroupTitle,
                 })
                 .eq("id", group.id)
 
             if (error) throw error;
+
+            if (oldGroupTitle !== newGroupTitle) {
+                try {
+                    const { data: { user } } = await supabase.auth.getUser();
+                    const { error } = await supabase
+                        .from("exercises")
+                        .update({
+                            group: newGroupTitle,
+                        })
+                        .eq("group", oldGroupTitle)
+                        .eq("userId", user?.id)
+
+                        if (error) throw error;
+                } catch (error) {
+                    alert(error.message)
+                }
+            }
 
             toast.success("Successfully updated group!", {
                 position: "bottom-center"
@@ -65,11 +83,11 @@ export default function GroupRow({ group }) {
                             <label className="Label" htmlFor="name">
                                 <b>Title</b>
                             </label>
-                            <Input value={groupTitle ?? ""} onChange={e => setGroupTitle(e.target.value)} />
+                            <Input defaultValue={oldGroupTitle ?? ""} onChange={e => setNewGroupTitle(e.target.value)} />
                         </section>
                         <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
                             <Dialog.Close asChild>
-                                <Button onClick={updateGroup}>
+                                <Button onClick={updateGroup} disabled={disabled}>
                                     Save changes
                                 </Button>
                             </Dialog.Close>
