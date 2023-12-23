@@ -11,8 +11,6 @@ export default function WorkoutsHome(props) {
     const location = useLocation();
     const group = location?.state.data; // data passed from Link
 
-
-
     async function fetchWorkouts(groupTitle) {
         try {
             const { data: { user } } = await supabase.auth.getUser();

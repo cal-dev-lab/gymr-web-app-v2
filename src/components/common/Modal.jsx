@@ -2,11 +2,11 @@ import React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import './Modal.css'
 
-export default function Modal() {
+export default function Modal({ title = "" }) {
     return (
         <Dialog.Root>
             <Dialog.Trigger asChild>
-                <button>Edit profile</button>
+                <button className='text-white'>{title}</button>
             </Dialog.Trigger>
 
             <Dialog.Portal>

@@ -1,10 +1,11 @@
-import { HiChevronDown, HiEllipsisHorizontal, HiCheck, HiUser } from "react-icons/hi2";
+import { HiChevronDown, HiEllipsisHorizontal, HiCheck, HiUser, HiPencilSquare } from "react-icons/hi2";
 import Box from "../common/Box";
 import Heading from "../common/Heading";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Checkbox from '@radix-ui/react-checkbox';
-import Dropdown from "../common/Dropdown";
 import { supabase } from "../../supabaseClient";
+import { Toaster, toast } from "react-hot-toast";
+import { useRevalidator } from "react-router";
 
 export default function WorkoutCard({ workout }) {
     const [arrDirection, setArrDirection] = useState(false);
@@ -15,17 +16,6 @@ export default function WorkoutCard({ workout }) {
         setArrDirection(!arrDirection)
         setShowContent(!showContent)
     }
-
-    const options = [
-        {
-            id: 1,
-            element: <p>Update</p>
-        },
-        {
-            id: 2,
-            element: <p>Delete</p>
-        },
-    ]
 
     async function updateWorkout() {
         try {
@@ -42,69 +32,77 @@ export default function WorkoutCard({ workout }) {
         
             if (error) throw error;
         
-            alert("Successfully updated artist!");
-            window.location.reload();
+            toast.success("Successfully updated workout!", {
+                position: "bottom-center",
+                duration: 2000
+            })
+
+            setTimeout(() => {
+                window.location.reload(true);
+            },[2000])
+            
           } catch (error) {
             alert(error.message);
           } 
     }
 
     return (
-        <Box colour="purple">
-            <div className="flex items-center justify-between" onClick={toggleContent}>
-                <Heading size="sm" classNames="flex items-center gap-2">
-                    <b className="text-white">{workout.title}</b>
-                    {workout.complete && <HiCheck className="text-white" />}
-                </Heading>
-                
-                <div className="flex items-center gap-2">
-                    <Dropdown icon={<HiEllipsisHorizontal className="text-white" />} options={options} />
+        <>
+            <Toaster />
+            <Box colour="purple">
+                <div className="flex items-center justify-between" onClick={toggleContent}>
+                    <Heading size="sm" classNames="flex items-center gap-2">
+                        {workout.complete && <HiCheck className="text-white" />}
+                        <b className="text-white">{workout.title}</b>
+                    </Heading>
+                    
+                    <div className="flex items-center gap-2">
+                        <HiPencilSquare />
 
-                    {/* Add a modal to edit workout when clicking Update from dropdown */}
-
-                    <HiChevronDown onClick={toggleContent} className={`${arrDirection ? "rotate-180" : "rotate-360"}`} />
+                        <HiChevronDown onClick={toggleContent} className={`${arrDirection ? "rotate-180" : "rotate-360"}`} />
+                    </div>
+                    
                 </div>
-                
-            </div>
 
-            {showContent && (
-                <Box classnames="!m-0 !mt-2">
-                    <section className="grid grid-cols-4 gap-4">
-                        <div>
-                            <b className="text-sm">Sets</b>
-                            <p>{workout.sets}</p>
-                        </div>
-                        
-                        <div>
-                            <b className="text-sm">Reps</b>
-                            <p>{workout.repetitions}</p>
-                        </div>
+                {showContent && (
+                    <Box classnames="!m-0 !mt-2">
+                        <section className="grid grid-cols-4 gap-4">
+                            <div>
+                                <b className="text-sm">Sets</b>
+                                <p>{workout.sets}</p>
+                            </div>
+                            
+                            <div>
+                                <b className="text-sm">Reps</b>
+                                <p>{workout.repetitions}</p>
+                            </div>
 
-                        <div>
-                            <b className="text-sm">Weight</b>
-                            <p>{workout.weight}kg</p>
-                        </div>
+                            <div>
+                                <b className="text-sm">Weight</b>
+                                <p>{workout.weight}kg</p>
+                            </div>
 
-                        <div>
-                            <b className="text-sm" htmlFor="completed">Done</b>
-                            <Checkbox.Root
-                                className="bg-purple w-5 h-5 rounded flex items-center justify-center"
-                                checked={completed}
-                                onCheckedChange={(e) => {
-                                    setCompleted(!completed)
-                                    updateWorkout();
-                                }}
-                                value={completed}
-                                id="completed"
-                            >
-                                <Checkbox.Indicator>
-                                    <HiCheck className="text-white" />
-                                </Checkbox.Indicator>
-                            </Checkbox.Root>
-                        </div>
-                    </section>
-                </Box>
-            )}
-        </Box>
+                            <div>
+                                <b className="text-sm" htmlFor="completed">Done</b>
+                                <Checkbox.Root
+                                    className="bg-purple w-5 h-5 rounded flex items-center justify-center"
+                                    checked={completed}
+                                    onCheckedChange={(e) => {
+                                        setCompleted(!completed)
+                                        updateWorkout();
+                                    }}
+                                    value={completed}
+                                    id="completed"
+                                >
+                                    <Checkbox.Indicator>
+                                        <HiCheck className="text-white" />
+                                    </Checkbox.Indicator>
+                                </Checkbox.Root>
+                            </div>
+                        </section>
+                    </Box>
+                )}
+            </Box>
+        </>
     )
 }

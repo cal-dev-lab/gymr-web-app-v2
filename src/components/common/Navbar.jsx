@@ -7,7 +7,7 @@ export default function Navbar({ user }) {
     const options = [
         {
             id: 1,
-            element: <button onClick={() => supabase.auth.signOut()}>Sign out</button>
+            element: <button className="text-white" onClick={() => supabase.auth.signOut()}>Sign out</button>
         }
     ]
 

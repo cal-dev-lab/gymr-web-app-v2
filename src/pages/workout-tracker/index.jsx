@@ -76,7 +76,7 @@ function WorkoutTracker({ session }) {
     }
 
     return (
-        <section className="bg-white h-screen">
+        <section className="h-screen">
             <div className="text-center py-4">
                 <Heading size="xxxl">
                     <b className="text-purple">Gymr.</b>
@@ -84,7 +84,7 @@ function WorkoutTracker({ session }) {
             </div>
             <Navbar user={user} />
 
-            <DailyProgress />
+            <DailyProgress data={data} user={user} />
 
             <MyWorkouts workouts={data} />
 
