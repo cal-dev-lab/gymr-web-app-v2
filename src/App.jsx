@@ -3,6 +3,8 @@ import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from './supabaseClient';
 import WorkoutTracker from './pages/workout-tracker';
+import Box from './components/common/Box';
+import Heading from './components/common/Heading';
 
 
 export default function App() {
@@ -26,11 +28,16 @@ export default function App() {
     <>
       {
         !session
-        ? <Auth 
-              supabaseClient={supabase}
-              appearance={{ theme: ThemeSupa }}
-              providers={false}
-            />
+        ? <Box classnames="min-h-screen flex flex-col items-center justify-center space-y-4">
+            <Heading size="xxxl">
+              Gymr
+            </Heading>
+            <Auth 
+                supabaseClient={supabase}
+                appearance={{ theme: ThemeSupa }}
+                providers={false}
+              />
+          </Box>
         : <WorkoutTracker session={session} />
       }
     </>
