@@ -111,7 +111,7 @@ export default function GroupRow({ group }) {
                                 </label>
                                 <Input defaultValue={oldGroupTitle ?? ""} onChange={e => setNewGroupTitle(e.target.value)} />
                             </section>
-                            <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
+                            <div className="flex mt-2 justify-end">
                                 <Dialog.Close asChild>
                                     <Button onClick={updateGroup} disabled={disabled}>
                                         Save changes
