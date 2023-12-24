@@ -18,6 +18,7 @@ export default {
       'background': '#000f17',
       'black': '#0f0f0f',
       'purple': '#9000ff',
+      'green': '#1bcf36'
     },
   },
   plugins: [],

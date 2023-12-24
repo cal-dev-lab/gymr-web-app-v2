@@ -19,6 +19,7 @@ export default function DailyProgress({ data, user }) {
     
     const [motivationMsg, setMotivationMsg] = useState("");
     const [completeExercises, setCompleteExercises] = useState(exercisesComplete.length);
+    const [isNextDay, setIsNextDay] = useState(false);
 
     async function fetchAllCompleteExercises() {
         try {
@@ -57,6 +58,8 @@ export default function DailyProgress({ data, user }) {
             if (data != null) {
                 return data;
             }
+
+            console.log('The resetCompleteStatus() has run successfully. They should all now be incomplete.');
         
             toast.success("Daily progress has been reset!", {
                 position: "bottom-center"
@@ -67,25 +70,28 @@ export default function DailyProgress({ data, user }) {
         } 
     }
 
-    // The two useEffects below reset the localStorage values of
-    // 'EXERCISES_COMPLETE
     useEffect(() => {
-        const data = window.localStorage.getItem('EXERCISES_COMPLETE');
-        if ( data !== null ) setCompleteExercises(JSON.parse(data))
+        const interval = setInterval(() => {
+          const currentDate = new Date();
+          const previousDate = new Date();
+          previousDate.setDate(previousDate.getDate() - 1); // Set the date to the previous day
+    
+          if (currentDate.getDate() !== previousDate.getDate()) {
+            setIsNextDay(true); // It is the next day
+          } else {
+            setIsNextDay(false); // It is not the next day
+          }
+        }, 1000); // Check every second
 
-        const resetAfter24Hours = () => {
-            fetchAllCompleteExercises();
+        if (isNextDay) {
             resetCompleteStatus();
-        };
+            fetchAllCompleteExercises();
 
-        const timer = setTimeout(resetAfter24Hours, 24 * 60 * 60 * 1000); // Resets daily 24 hours in milliseconds
-
-        return () => clearTimeout(timer); // Clear the timeout if the component unmounts or the state changes
+            console.log('It is now the next day.')
+        }
+    
+        return () => clearInterval(interval); // Clean up the interval
     }, []);
-
-    useEffect(() => {
-        window.localStorage.setItem('EXERCISES_COMPLETE', JSON.stringify(exercisesComplete.length));
-    }, [exercisesComplete.length]);
 
     // Sets motivation message based on percentage
     useEffect(() => {
@@ -138,7 +144,7 @@ export default function DailyProgress({ data, user }) {
                     */}
                 </p>
                 <Progress.Indicator
-                    className="bg-purple w-full h-full [transition: transform 660ms cubic-bezier(0.65, 0, 0.35, 1)]"
+                    className={`${calculation == 100 ? "bg-green" : "bg-purple"} w-full h-full [transition: transform 660ms cubic-bezier(0.65, 0, 0.35, 1)]`}
                     style={{ 
                         transform: `translateX(-${100 - calculation}%)`
                     }}

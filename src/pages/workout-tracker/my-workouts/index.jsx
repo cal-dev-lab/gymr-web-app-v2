@@ -9,12 +9,10 @@ import Button from "../../../components/common/Button";
 import { HiChevronDown, HiPlus, HiXMark } from "react-icons/hi2";
 import * as Dialog from '@radix-ui/react-dialog';
 import Input from "../../../components/common/Input";
-import Dropdown from "../../../components/common/Dropdown";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function WorkoutsHome() {
     const [data, setData] = useState([]);
-    const [groups, setGroups] = useState([]);
     const [disabled, setDisabled] = useState(false);
     const [arrDirection, setArrDirection] = useState(false);
     const [showContent, setShowContent] = useState(false);
@@ -22,14 +20,12 @@ export default function WorkoutsHome() {
     const [title, setTitle] = useState("");
     const [sets, setSets] = useState("");
     const [reps, setReps] = useState("");
-    const [weight, setWeight] = useState("");
-    const [groupSet, setGroupSet] = useState("");
-    
+    const [weight, setWeight] = useState("");    
 
     const location = useLocation();
     const group = location?.state.data; // data passed from Link
 
-    if (!group) {
+    if (!data) {
         return <Loader />;
     }
 
@@ -138,21 +134,21 @@ export default function WorkoutsHome() {
                                             <label>
                                                 <b>Sets</b>
                                             </label>
-                                            <Input onChange={e => setSets(e.target.value)} />
+                                            <Input type="number" onChange={e => setSets(e.target.value)} />
                                         </div>
                                         
                                         <div>
                                             <label>
                                                 <b>Repititions</b>
                                             </label>
-                                            <Input onChange={e => setReps(e.target.value)} />
+                                            <Input type="number" onChange={e => setReps(e.target.value)} />
                                         </div>
 
                                         <div>
                                             <label>
                                                 <b>Weight (in kg)</b>
                                             </label>
-                                            <Input onChange={e => setWeight(e.target.value)} />
+                                            <Input type="number" onChange={e => setWeight(e.target.value)} />
                                         </div>
 
                                         <div>
@@ -184,10 +180,10 @@ export default function WorkoutsHome() {
                             </Dialog.Portal>
                         </Dialog.Root>
                         
-                        <Button classnames="!bg-purple/20 !text-purple flex w-full items-center gap-2">
+                        {/* <Button classnames="!bg-purple/20 !text-purple flex w-full items-center gap-2">
                             <HiPlus />
                             Delete exercise(s)
-                        </Button>
+                        </Button> */}
                     </div>
                 )}
             </Box>
@@ -200,7 +196,10 @@ export default function WorkoutsHome() {
                         ))
                     ) : (
                         <Box>
-                            <p>No exercises for this group.</p>
+                            <Heading size="lg">
+                                <b>No exercises found</b>
+                            </Heading>
+                            <p>Click the group title to add a new exercise.</p>
                         </Box>
                     )
                 }

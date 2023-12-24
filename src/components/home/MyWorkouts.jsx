@@ -39,8 +39,6 @@ export default function MyWorkouts() {
         return <Loader />
     }
 
-    console.log(data)
-    
     return (
         <Box>
             <Heading size="sm" classNames='mb-4'>
