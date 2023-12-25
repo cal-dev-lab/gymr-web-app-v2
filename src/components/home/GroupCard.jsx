@@ -41,7 +41,7 @@ export default function GroupCard({ group }) {
     let exercisesComplete = Object.values(data).filter(item => item.complete == true);
 
     return (
-        <Box  colour="purple" classnames="flex justify-between items-center gap-2 !m-0 !mb-2">
+        <Box  colour="purple" classnames="flex justify-between items-center gap-2 !m-0">
             <Heading size="sm" classNames="truncate text-white">
                     <b title={group.title}>
                         {group.title ?? ""}

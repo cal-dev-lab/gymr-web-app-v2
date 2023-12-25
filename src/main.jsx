@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
 import App from './App';
-import WorkoutsHome from './pages/workout-tracker/my-workouts';
+import WorkoutsHome from './pages/workout-tracker/workout';
 import CreateGroup from './pages/settings/create-group';
 
 const router = createBrowserRouter([

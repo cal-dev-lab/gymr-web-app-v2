@@ -204,7 +204,6 @@ export default function WorkoutsHome() {
                     )
                 }
             </div>
-
         </section>
     )
 }
