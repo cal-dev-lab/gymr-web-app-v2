@@ -6,7 +6,7 @@ import Loader from '../common/Loader';
 import { supabase } from '../../supabaseClient';
 import toast, { Toaster } from 'react-hot-toast';
 
-export default function DailyProgress({ data, user }) {
+export default function DailyProgress({ data }) {
     if (!data) {
         return <Loader />
     }
@@ -19,7 +19,6 @@ export default function DailyProgress({ data, user }) {
     
     const [motivationMsg, setMotivationMsg] = useState("");
     const [completeExercises, setCompleteExercises] = useState(exercisesComplete.length);
-    const [isNextDay, setIsNextDay] = useState(false);
 
     async function fetchAllCompleteExercises() {
         try {
@@ -37,8 +36,7 @@ export default function DailyProgress({ data, user }) {
               return data, setCompleteExercises(0);
             }
           } catch (error) {
-            alert(error.message);
-            // Toast notification error
+            toast.error(error.message);
         }
     }
 
@@ -58,15 +56,13 @@ export default function DailyProgress({ data, user }) {
             if (data != null) {
                 return data;
             }
-
-            console.log('The resetCompleteStatus() has run successfully. They should all now be incomplete.');
         
-            toast.success("Daily progress has been reset!", {
+            toast.success("Your daily progress has reset.", {
                 position: "bottom-center"
             });
             window.location.reload();
         } catch (error) {
-            alert(error.message);
+            toast.error(error.message);
         } 
     }
 
@@ -75,20 +71,14 @@ export default function DailyProgress({ data, user }) {
           const currentDate = new Date();
           const previousDate = new Date();
           previousDate.setDate(previousDate.getDate() - 1); // Set the date to the previous day
-    
+
           if (currentDate.getDate() !== previousDate.getDate()) {
-            setIsNextDay(true); // It is the next day
+            fetchAllCompleteExercises();
+            resetCompleteStatus();
           } else {
             setIsNextDay(false); // It is not the next day
           }
-        }, 1000); // Check every second
-
-        if (isNextDay) {
-            resetCompleteStatus();
-            fetchAllCompleteExercises();
-
-            console.log('It is now the next day.')
-        }
+        }, 86400000); // Check every 24 hours
     
         return () => clearInterval(interval); // Clean up the interval
     }, []);
