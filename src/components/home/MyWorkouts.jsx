@@ -46,34 +46,35 @@ export default function MyWorkouts() {
                 <p>Pick from a workout group below and record your workout.</p>
             </Heading>
 
-            {
-                data?.length > 0 ? (
-                    data.map((group, index) => (
-                        <Link
-                            to={`/workout/${group.title}`}
-                            state={{ data: group }}
-                            key={index}
-                        >
-                            <GroupCard group={group} />
-                        </Link>
+            <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {
+                    data?.length > 0 ? (
+                        data.map((group, index) => (
+                            <Link
+                                to={`/workout/${group.title}`}
+                                state={{ data: group }}
+                                key={index}
+                            >
+                                <GroupCard group={group} />
+                            </Link>
 
-                    ))
-                ) : (
-                    <div className="w-full">
-                        <p>You haven't setup any groups yet!</p>
-                        <Link 
-                            to="/settings/create-group"
-                            state={{ data: data }}
-                        >
-                            <Button classnames="w-full mt-2 flex gap-2">
-                                <HiPlus />
-                                <span>Create a group</span>
-                            </Button>
-                        </Link>
-                    </div>
-                )
-                
-            }
+                        ))
+                    ) : (
+                        <div className="w-full">
+                            <p>You haven't setup any groups yet!</p>
+                            <Link 
+                                to="/settings/create-group"
+                                state={{ data: data }}
+                            >
+                                <Button classnames="w-full mt-2 flex gap-2">
+                                    <HiPlus />
+                                    <span>Create a group</span>
+                                </Button>
+                            </Link>
+                        </div>
+                    )
+                }
+            </section>
         </Box>
     )
 }

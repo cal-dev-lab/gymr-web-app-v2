@@ -39,34 +39,6 @@ function WorkoutTracker({ session }) {
         } 
     }
 
-    async function addExercise() {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-
-            const { data, error } = await supabase
-                .from("exercises")
-                .insert({
-                    userId: user?.id,
-                    title: title,
-                    repetitions: reps,
-                    weight: weight,
-                    sets: sets,
-                    complete: complete
-                })
-                .single()
-        
-            if (error) throw error;
-              
-            if (data != null) {
-              return data;
-            }
-            // Reset inputs to empty fields using setTitle("")
-          } catch (error) {
-            alert(error.message);
-            // Toast notification error
-        }
-    }
-
     useEffect(() => {
         fetchExercises();
     }, []);
@@ -78,7 +50,7 @@ function WorkoutTracker({ session }) {
     return (
         <section className="h-screen">
             <div className="text-center py-4">
-                <Heading size="xxxl">
+                <Heading size="xxxxl">
                     <b className="text-purple">Gymr.</b>
                 </Heading>
             </div>

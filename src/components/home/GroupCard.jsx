@@ -36,10 +36,9 @@ export default function GroupCard({ group }) {
     if (!data)
         return <Loader />;
 
-    // Calculate percentage complete
+    // Find all exercises with a true complete status
     let totalExercises = data?.length;
     let exercisesComplete = Object.values(data).filter(item => item.complete == true);
-
 
     return (
         <Box  colour="purple" classnames="flex justify-between items-center gap-2 !m-0 !mb-2">

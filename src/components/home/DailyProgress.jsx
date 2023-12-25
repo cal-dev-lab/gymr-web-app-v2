@@ -103,7 +103,7 @@ export default function DailyProgress({ data }) {
             <Toaster />
             <Heading size="sm" classNames='mb-4'>
                 <b>Daily progress tracker</b>
-                <p>Track your total workouts for today.</p>
+                <p>Your progress will reset every 24 hours automatically.</p>
             </Heading>
 
             <p className="font-bold mb-1">

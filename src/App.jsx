@@ -38,7 +38,9 @@ export default function App() {
                 providers={false}
               />
           </Box>
-        : <WorkoutTracker session={session} />
+        : <section className="sm:mx-10 md:mx-16 lg:mx-40">
+            <WorkoutTracker session={session} />
+          </section>
       }
     </>
   )
