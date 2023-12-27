@@ -1,13 +1,12 @@
 import Heading from "./Heading";
 import Dropdown from './Dropdown';
-import { supabase } from "../../supabaseClient";
 import Box from "./Box";
 
 export default function Navbar({ user }) {
     const options = [
         {
             id: 1,
-            element: <button className="text-white" onClick={() => supabase.auth.signOut()}>Sign out</button>
+            element: <button className="text-white" onClick={() => {}}>Sign out</button>
         }
     ]
 
@@ -18,7 +17,7 @@ export default function Navbar({ user }) {
                     <Heading>
                         Hello,
                     </Heading>
-                    <p className="text-black text-sm font-semibold">{user.email}</p>
+                    <p className="text-black text-sm font-semibold">{user?.email ?? ""}</p>
                 </div>
 
                 <Dropdown options={options} />

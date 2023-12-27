@@ -1,5 +1,5 @@
 import { supabase } from "../../../supabaseClient";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Box from "../../../components/common/Box";
 import Button from "../../../components/common/Button";
 import Heading from "../../../components/common/Heading";
@@ -7,71 +7,114 @@ import Input from "../../../components/common/Input";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "../../../components/common/Loader";
 import GroupRow from "../../../components/create-group/GroupRow";
+import axios from "axios";
+import { UserContext } from "../../../../context/userContext";
 
 export default function CreateGroup() {
-    const [data, setData] = useState([]);
-    const [groupTitle, setGroupTitle] = useState("");
+    const { user } = useContext(UserContext);
+    const [data, setData] = useState({
+        title: ""
+    });
+
+    // This is for fetching and setting groups
+    const [groups, setGroups] = useState([]);
+
     const [disabled, setDisabled] = useState(false);
 
-    async function fetchGroups() {
+    // async function fetchGroups() {
+    //     try {
+    //         const { data: { user } } = await supabase.auth.getUser();
+
+    //         const { data, error } = await supabase
+    //             .from("exercise_groups")
+    //             .select("*")
+    //             .eq("userId", user?.id)
+
+    //         if (error) throw error;
+
+    //         if (data != null) {
+    //             return setData(data);
+    //         }
+    //       } catch (error) {
+    //         alert(error.message);
+    //         // Toast notification error
+    //     }
+    // }
+
+    // async function create() {
+    //     try {
+    //         setDisabled(true);
+
+    //         const { data: { user } } = await supabase.auth.getUser();
+
+    //         const { error } = await supabase
+    //             .from("exercise_groups")
+    //             .insert({
+    //                 title: groupTitle,
+    //                 userId: user?.id
+    //             })
+
+    //         if (error) throw error;
+
+            
+
+    //         toast.success("Successfully added group!", {
+    //             position: "bottom-center"
+    //         })
+            
+    //         window.location.reload();
+    //       } catch (error) {
+    //         alert(error.message);
+    //         // Toast notification error
+    //     }
+    // }
+
+    if (!user) {
+        return <Loader />
+    }
+
+    const createGroup = async e => {
+        e.preventDefault();
+
+        const { title, userId } = data;
+
         try {
-            const { data: { user } } = await supabase.auth.getUser();
+            const { data } = await axios.post('/groups/create-group', {
+                title: title,
+                userId: user?.id
+            });
 
-            const { data, error } = await supabase
-                .from("exercise_groups")
-                .select("*")
-                .eq("userId", user?.id)
-
-            if (error) throw error;
-
-            if (data != null) {
-                return setData(data);
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                setData({});
+                toast.success("Successfully created group!");
+                window.location.reload();
             }
-          } catch (error) {
-            alert(error.message);
-            // Toast notification error
+            
+            console.log('Posted successfully')
+        } catch (error) {
+            console.log(error);
         }
     }
 
-    async function handleSubmit() {
+    const fetchGroups = async () => {
         try {
-            setDisabled(true);
-
-            const { data: { user } } = await supabase.auth.getUser();
-
-            const { error } = await supabase
-                .from("exercise_groups")
-                .insert({
-                    title: groupTitle,
-                    userId: user?.id
-                })
-
-            if (error) throw error;
-
-            
-
-            toast.success("Successfully added group!", {
-                position: "bottom-center"
-            })
-            
-            window.location.reload();
-          } catch (error) {
-            alert(error.message);
-            // Toast notification error
+            console.log('before get')
+            const groups = await axios.get(`/groups/fetch-groups/${user?.id}`)
+            setData(groups);
+            console.log(groups.data)
+        } catch (error) {
+            console.log(error);
         }
     }
 
-    useEffect(() => {
-        fetchGroups();
-    }, []);
-
-    if (!data) {
-        return <Loader />;
-    }
+    // useEffect(() => {
+    //     fetchGroups();
+    // }, []);
 
     return (
         <>
-            <Toaster />
             <Box>
                 <Heading size="xl">
                     <b>Create group</b>
@@ -81,19 +124,19 @@ export default function CreateGroup() {
 
             <Box classnames="space-y-4">
                 <div>
+                    <Button onClick={fetchGroups}>Fetch groups</Button>
                     <Heading>
                         <b>Group title</b> {/* Maybe a tooltip icon with desc. */}
                     </Heading> 
                     <Input
-                        onChange={e => setGroupTitle(e.target.value)}
-                        className="placeholder:italic" 
+                        onChange={e => setData({...data, title: e.target.value})}
                         placeholder="E.g. Chest & Triceps"
                         required
                     />
                 </div>
 
                 <div className="flex w-full justify-end">
-                    <Button onClick={handleSubmit} disabled={groupTitle == "" ? true : disabled}>Create group</Button>
+                    <Button onClick={createGroup} disabled={data?.title == "" ? true : disabled}>Create group</Button>
                 </div>
             </Box>
 

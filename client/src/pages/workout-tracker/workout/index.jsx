@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { supabase } from "../../../supabaseClient";
 import { useLocation } from "react-router";
 import Loader from "../../../components/common/Loader";
@@ -10,8 +10,11 @@ import { HiChevronDown, HiPlus, HiXMark } from "react-icons/hi2";
 import * as Dialog from '@radix-ui/react-dialog';
 import Input from "../../../components/common/Input";
 import toast, { Toaster } from "react-hot-toast";
+import { UserContext } from "../../../../context/userContext";
+import axios from "axios";
 
 export default function WorkoutsHome() {
+    const { user } = useContext(UserContext);
     const [data, setData] = useState([]);
     const [disabled, setDisabled] = useState(false);
     const [arrDirection, setArrDirection] = useState(false);
@@ -56,31 +59,67 @@ export default function WorkoutsHome() {
         }
     }
 
-    async function createExercise() {
+    // async function createExercise() {
+    //     try {
+    //         const { data: { user } } = await supabase.auth.getUser();
+
+    //         const { error } = await supabase
+    //             .from("exercises")
+    //             .insert({
+    //                 title: title,
+    //                 sets: sets,
+    //                 repetitions: reps,
+    //                 weight: weight,
+    //                 group: group.title,
+    //                 userId: user?.id
+    //             })
+
+    //             if (error) throw error;
+
+    //             toast.success("Successfully created exercise!", {
+    //                 position: "bottom-center"
+    //             })
+
+    //             window.location.reload();
+    //       } catch (error) {
+    //         alert(error.message);
+    //         // Toast notification error
+    //     }
+    // }
+
+    const createExercise = async e => {
+        e.preventDefault();
+
+        const {
+            title,
+            userId,
+            group,
+            repetitions,
+            weight,
+            sets,
+            complete
+        } = data;
+
         try {
-            const { data: { user } } = await supabase.auth.getUser();
+            const { data } = await axios.post('/create-exercise', {
+                title,
+                userId,
+                group,
+                repetitions,
+                weight,
+                sets,
+                complete: false
+            });
 
-            const { error } = await supabase
-                .from("exercises")
-                .insert({
-                    title: title,
-                    sets: sets,
-                    repetitions: reps,
-                    weight: weight,
-                    group: group.title,
-                    userId: user?.id
-                })
-
-                if (error) throw error;
-
-                toast.success("Successfully created exercise!", {
-                    position: "bottom-center"
-                })
-
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                // @TODO: Convert all exercise state to object and then setData({})
+                toast.success("Successfully created exercise!");
                 window.location.reload();
-          } catch (error) {
-            alert(error.message);
-            // Toast notification error
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -91,7 +130,6 @@ export default function WorkoutsHome() {
 
     return (
         <section>
-            <Toaster />
             <Box>
                 <div onClick={toggleContent} className="flex items-center justify-between">
                     <Heading size="lg">

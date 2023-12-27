@@ -6,86 +6,85 @@ import Input from "../common/Input";
 import Heading from "../common/Heading";
 import Button from "../common/Button";
 import { useEffect, useState } from "react";
-import { supabase } from "../../supabaseClient";
 import toast, { Toaster } from "react-hot-toast";
 
-export default function GroupRow({ group }) {
+export default function GroupRow() {
     const [oldGroupTitle, setOldGroupTitle] = useState(group.title);
     const [newGroupTitle, setNewGroupTitle] = useState("");
     const [disabled, setDisabled] = useState(false);
 
-    async function updateGroup() {
-        try {
-            setDisabled(true);
+    // async function updateGroup() {
+    //     try {
+    //         setDisabled(true);
 
-            // const { data: { user } } = await supabase.auth.getUser();
+    //         // const { data: { user } } = await supabase.auth.getUser();
 
-            const { error } = await supabase
-                .from("exercise_groups")
-                .update({
-                    title: newGroupTitle,
-                })
-                .eq("id", group.id)
+    //         const { error } = await supabase
+    //             .from("exercise_groups")
+    //             .update({
+    //                 title: newGroupTitle,
+    //             })
+    //             .eq("id", group.id)
 
-            if (error) throw error;
+    //         if (error) throw error;
 
-            if (oldGroupTitle !== newGroupTitle) {
-                try {
-                    const { data: { user } } = await supabase.auth.getUser();
-                    const { error } = await supabase
-                        .from("exercises")
-                        .update({
-                            group: newGroupTitle,
-                        })
-                        .eq("group", oldGroupTitle)
-                        .eq("userId", user?.id)
+    //         if (oldGroupTitle !== newGroupTitle) {
+    //             try {
+    //                 const { data: { user } } = await supabase.auth.getUser();
+    //                 const { error } = await supabase
+    //                     .from("exercises")
+    //                     .update({
+    //                         group: newGroupTitle,
+    //                     })
+    //                     .eq("group", oldGroupTitle)
+    //                     .eq("userId", user?.id)
 
-                        if (error) throw error;
-                } catch (error) {
-                    alert(error.message)
-                }
-            }
+    //                     if (error) throw error;
+    //             } catch (error) {
+    //                 alert(error.message)
+    //             }
+    //         }
 
-            toast.success("Successfully updated group!", {
-                position: "bottom-center"
-            })
+    //         toast.success("Successfully updated group!", {
+    //             position: "bottom-center"
+    //         })
             
-            window.location.reload();
-          } catch (error) {
-            alert(error.message);
-            // Toast notification error
-        }
-    }
+    //         window.location.reload();
+    //       } catch (error) {
+    //         alert(error.message);
+    //         // Toast notification error
+    //     }
+    // }
 
-    async function deleteGroup() {
-        try {
-            setDisabled(true);
+    // async function deleteGroup() {
+    //     try {
+    //         setDisabled(true);
 
-            // const { data: { user } } = await supabase.auth.getUser();
+    //         // const { data: { user } } = await supabase.auth.getUser();
 
-            const { error } = await supabase
-                .from("exercise_groups")
-                .delete()
-                .eq("id", group.id)
+    //         const { error } = await supabase
+    //             .from("exercise_groups")
+    //             .delete()
+    //             .eq("id", group.id)
 
-            if (error) throw error;
+    //         if (error) throw error;
 
-            toast.success("Successfully deleted group!", {
-                position: "bottom-center"
-            })
+    //         toast.success("Successfully deleted group!", {
+    //             position: "bottom-center"
+    //         })
             
-            window.location.reload();
-          } catch (error) {
-            alert(error.message);
-            // Toast notification error
-        }
-    }
+    //         window.location.reload();
+    //       } catch (error) {
+    //         alert(error.message);
+    //         // Toast notification error
+    //     }
+    // }
 
     return (
         <Box colour="purple" classnames="m-0">
             <Toaster />
             
-            <p>{group.title}</p>
+            <p>GROUP OBJECT TITLE HERE</p>
 
             {/* Edit */}
             <div>
@@ -113,7 +112,7 @@ export default function GroupRow({ group }) {
                             </section>
                             <div className="flex mt-2 justify-end">
                                 <Dialog.Close asChild>
-                                    <Button onClick={updateGroup} disabled={disabled}>
+                                    <Button onClick={() => {}} disabled={disabled}>
                                         Save changes
                                     </Button>
                                 </Dialog.Close>
@@ -153,7 +152,7 @@ export default function GroupRow({ group }) {
                                     </Button>
                                 </Dialog.Close>
                                 <Dialog.Close asChild>
-                                    <Button colour="purple" onClick={deleteGroup} disabled={disabled}>
+                                    <Button colour="purple" onClick={() => {}} disabled={disabled}>
                                         Confirm
                                     </Button>
                                 </Dialog.Close>

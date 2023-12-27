@@ -3,15 +3,34 @@ import Heading from "../../components/common/Heading";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+    const [data, setData] = useState({
+        email: "",
+        password: ""
+    });
 
-    const login = e => {
+    const login = async e => {
         e.preventDefault();
 
-        axios.get('/')
+        const { email, password } = data;
+
+        try {
+            const data = await axios.post("/login", {
+                email,
+                password
+            });
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                setData({});
+                navigate("/");
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -19,10 +38,10 @@ export default function Login() {
             <Heading>Login</Heading>
 
             <p>Email</p>
-            <Input value={email} onChange={e => setEmail(e.target.value)} />
+            <Input value={data.email} onChange={e => setData({...data, email: e.target.value})} />
 
             <p>Password</p>
-            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            <Input type="password" value={data.password} onChange={e => setData({...data, password: e.target.value})} />
 
             <Button onClick={login}>Log in</Button>
         </section>

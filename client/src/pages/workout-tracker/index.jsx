@@ -8,44 +8,34 @@ import DailyProgress from "../../components/home/DailyProgress";
 import MyWorkouts from "../../components/home/MyWorkouts";
 import Heading from "../../components/common/Heading";
 
-function WorkoutTracker({ session }) {
-    const [user, setUser] = useState([]);
+function WorkoutTracker({ user }) {
     const [data, setData] = useState([]);
-    const [title, setTitle] = useState("");
-    const [reps, setReps] = useState(0);
-    const [weight, setWeight] = useState(0);
-    const [sets, setSets] = useState(0);
-    const [complete, setComplete] = useState(false);
 
-    async function fetchExercises() {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
+    // async function fetchExercises() {
+    //     try {
+    //         const { data: { user } } = await supabase.auth.getUser();
 
-            const { data, error } = await supabase
-            .from("exercises")
-            .select("*")
-            .eq("userId", user?.id)
+    //         const { data, error } = await supabase
+    //         .from("exercises")
+    //         .select("*")
+    //         .eq("userId", user?.id)
 
-            if (error) throw error;
+    //         if (error) throw error;
               
-            if (data != null) {
-              return setData(data), setUser(user);
-            }
+    //         if (data != null) {
+    //           return setData(data), setUser(user);
+    //         }
 
-            // console.log(data)
-          } catch (error) {
-            alert(error.message);
-            // Toast notification error
-        } 
-    }
+    //         // console.log(data)
+    //       } catch (error) {
+    //         alert(error.message);
+    //         // Toast notification error
+    //     } 
+    // }
 
-    useEffect(() => {
-        fetchExercises();
-    }, []);
-    
-    if (!data) {
-        return <Loader />;
-    }
+    // useEffect(() => {
+    //     fetchExercises();
+    // }, []);
 
     return (
         <section className="h-screen">
