@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { createGroup, fetchGroups } = require("../controllers/groupController");
-const GroupModel = require("../models/groups");
+const { create, fetch } = require("../controllers/groupController");
 
 const router = express.Router();
 
@@ -13,11 +12,7 @@ router.use(
     })
 )
 
-router.post('/create-group', createGroup);
-// router.get('/fetch-groups/:id', fetchGroups);
-
-router.get('/fetch-groups/:id', fetchGroups);
-
-// router.get('/exercises', getExercises);
+router.get('/:id', fetch);
+router.post('/', create);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const Group = require("../models/groups");
 
 // Create group endpoint
-const createGroup = async (req, res) => {
+const create = async (req, res) => {
     try {
         const {
             title,
@@ -25,11 +25,14 @@ const createGroup = async (req, res) => {
 }
 
 // Fetch group endpoint
-const fetchGroups = async (req, res) => {
-    const id = req.params;
-    try {
+const fetch = async (req, res) => {
+    const { id } = req.params;
 
-        const foundData = await Group.find({userId: id}).toArray();
+    console.log(id);
+
+    try {
+        const foundData = await Group.find({ userId: id });
+        console.log(foundData)
 
         if (!foundData) {
             return res.status(404).json({ message: 'Data not found' });
@@ -38,10 +41,11 @@ const fetchGroups = async (req, res) => {
         res.status(200).json(foundData);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Failed to fetch groups'})
     }
 }
 
 module.exports = {
-    createGroup,
-    fetchGroups
+    create,
+    fetch
 }

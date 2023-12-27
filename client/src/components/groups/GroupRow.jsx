@@ -5,86 +5,16 @@ import { HiXMark } from "react-icons/hi2";
 import Input from "../common/Input";
 import Heading from "../common/Heading";
 import Button from "../common/Button";
-import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
 
-export default function GroupRow() {
+export default function GroupRow({ group }) {
     const [oldGroupTitle, setOldGroupTitle] = useState(group.title);
     const [newGroupTitle, setNewGroupTitle] = useState("");
     const [disabled, setDisabled] = useState(false);
 
-    // async function updateGroup() {
-    //     try {
-    //         setDisabled(true);
-
-    //         // const { data: { user } } = await supabase.auth.getUser();
-
-    //         const { error } = await supabase
-    //             .from("exercise_groups")
-    //             .update({
-    //                 title: newGroupTitle,
-    //             })
-    //             .eq("id", group.id)
-
-    //         if (error) throw error;
-
-    //         if (oldGroupTitle !== newGroupTitle) {
-    //             try {
-    //                 const { data: { user } } = await supabase.auth.getUser();
-    //                 const { error } = await supabase
-    //                     .from("exercises")
-    //                     .update({
-    //                         group: newGroupTitle,
-    //                     })
-    //                     .eq("group", oldGroupTitle)
-    //                     .eq("userId", user?.id)
-
-    //                     if (error) throw error;
-    //             } catch (error) {
-    //                 alert(error.message)
-    //             }
-    //         }
-
-    //         toast.success("Successfully updated group!", {
-    //             position: "bottom-center"
-    //         })
-            
-    //         window.location.reload();
-    //       } catch (error) {
-    //         alert(error.message);
-    //         // Toast notification error
-    //     }
-    // }
-
-    // async function deleteGroup() {
-    //     try {
-    //         setDisabled(true);
-
-    //         // const { data: { user } } = await supabase.auth.getUser();
-
-    //         const { error } = await supabase
-    //             .from("exercise_groups")
-    //             .delete()
-    //             .eq("id", group.id)
-
-    //         if (error) throw error;
-
-    //         toast.success("Successfully deleted group!", {
-    //             position: "bottom-center"
-    //         })
-            
-    //         window.location.reload();
-    //       } catch (error) {
-    //         alert(error.message);
-    //         // Toast notification error
-    //     }
-    // }
-
     return (
         <Box colour="purple" classnames="m-0">
-            <Toaster />
-            
-            <p>GROUP OBJECT TITLE HERE</p>
+            <p>{group.title}</p>
 
             {/* Edit */}
             <div>
